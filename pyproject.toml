@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "better-web-search"
+version = "0.1.0"
+description = ""
+authors = ["Ron Metzger <ron.metzger@korn-recycling.de>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+bs4 = "^0.0.2"
+googlesearch-python = "^1.3.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

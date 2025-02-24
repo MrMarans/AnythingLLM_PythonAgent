@@ -4,32 +4,58 @@
   "name": "Python Processor",
   "schema": "skill-1.0.0",
   "version": "1.0.0",
-  "description": "Example of calling a Python script with status updates",
+  "description": "Erstelle eine erweiterte und eigene Google Suche. Hierfür werden anhand der Fragen später ein paar weitere Formulierungen erstellt und dann in Google gesucht.",
   "entrypoint": {
     "file": "handler.js",
     "params": {
       "input": {
-        "description": "Input value to process",
+        "description": "Die Information, die der Nutzer suchen möchte. Dies wird genutzt, um eine Suche in Google zu ermöglichen.",
         "type": "string"
       }
     }
   },
   "examples": [
     {
-      "prompt": "Process this value: test",
-      "call": "{\"input\": \"test\"}"
+      "prompt": "Finde Informationen zu den besten Recyclingpraktiken in Deutschland",
+      "call": "{\"input\": \"beste Recyclingpraktiken Deutschland\"}"
+    },
+    {
+      "prompt": "Ermittle die gesetzlichen Vorschriften zur Abfallentsorgung in Bayern",
+      "call": "{\"input\": \"gesetzliche Vorschriften Abfallentsorgung Bayern\"}"
+    },
+    {
+      "prompt": "Vergleiche die Preise für die Entsorgung von Elektroschrott in verschiedenen Städten",
+      "call": "{\"input\": \"Preise Elektroschrott Entsorgung Städte\"}"
+    },
+    {
+      "prompt": "Suche nach innovativen Technologien zur Müllvermeidung",
+      "call": "{\"input\": \"innovativen Technologien Müllvermeidung\"}"
+    },
+    {
+      "prompt": "Finde heraus, wie viel Plastikmüll jährlich in Deutschland produziert wird",
+      "call": "{\"input\": \"Jährlicher Plastikmüll Deutschland\"}"
+    },
+    {
+      "prompt": "Erkundige dich nach den besten Methoden zur Kompostierung von Bioabfällen",
+      "call": "{\"input\": \"beste Methoden Kompostierung Bioabfälle\"}"
+    },
+    {
+      "prompt": "Informiere dich über die Auswirkungen von Müllverbrennung auf die Umwelt",
+      "call": "{\"input\": \"Auswirkungen Müllverbrennung Umwelt\"}"
+    },
+    {
+      "prompt": "Untersuche die Rolle von Kunststoffrecycling im Kreislaufwirtschaftsmodell",
+      "call": "{\"input\": \"Rolle Kunststoffrecycling Kreislaufwirtschaft\"}"
+    },
+    {
+      "prompt": "Finde heraus, wie Unternehmen ihre Abfallproduktion reduzieren können",
+      "call": "{\"input\": \"Wie Unternehmen ihre Abfallproduktion reduzieren Unternehmen\"}"
+    },
+    {
+      "prompt": "Recherchiere die Kosten und Verfahren für die Entsorgung von Sonderabfällen",
+      "call": "{\"input\": \"Kosten Verfahren Sonderabfälle Entsorgung\"}"
     }
   ],
   "setup_args": {
-    "WAIT_FOR_COMPLETION": {
-      "type": "boolean",
-      "required": false,
-      "input": {
-        "type": "boolean",
-        "default": true,
-        "hint": "Wait for Python process to complete"
-      },
-      "value": true
-    }
   }
 }
