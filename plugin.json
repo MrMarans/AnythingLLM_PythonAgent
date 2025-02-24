@@ -1,0 +1,35 @@
+{
+  "active": true,
+  "hubId": "better_web_search",
+  "name": "Python Processor",
+  "schema": "skill-1.0.0",
+  "version": "1.0.0",
+  "description": "Example of calling a Python script with status updates",
+  "entrypoint": {
+    "file": "handler.js",
+    "params": {
+      "input": {
+        "description": "Input value to process",
+        "type": "string"
+      }
+    }
+  },
+  "examples": [
+    {
+      "prompt": "Process this value: test",
+      "call": "{\"input\": \"test\"}"
+    }
+  ],
+  "setup_args": {
+    "WAIT_FOR_COMPLETION": {
+      "type": "boolean",
+      "required": false,
+      "input": {
+        "type": "boolean",
+        "default": true,
+        "hint": "Wait for Python process to complete"
+      },
+      "value": true
+    }
+  }
+}
