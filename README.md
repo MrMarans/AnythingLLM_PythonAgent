@@ -1,60 +1,65 @@
-# Charts Skill Test Runner
+# Better Web Search Agent Skill
 
-Diese Dateien ermöglichen das Testen des Charts-Skills ohne Installation in AnythingLLM.
+This agent skill enhances web searches by providing more comprehensive and relevant results through a multi-step process. It utilizes Google Search and LLM capabilities to deliver high-quality, summarized information from multiple sources.
 
-## Voraussetzungen
+## How it Works
 
-- Node.js installiert
-- Alle benötigten npm-Pakete installiert (`axios`)
+The agent follows these steps to process your search query:
 
-## Installation
+1. **Query Optimization** (0-25%)
+   - Takes the user's input query
+   - Uses LLM to generate multiple optimized search variations
+   - Creates alternative phrasings to capture different aspects of the search
 
-```bash
-npm install axios
-```
+2. **Web Search** (25-30%)
+   - Performs Google searches using all optimized queries
+   - Collects unique URLs, titles, and descriptions
+   - Removes duplicate results
 
-## Verwendung
+3. **Source Quality Assessment** (30-65%)
+   - Evaluates each source's relevance and quality
+   - Uses LLM to determine which sources are most valuable for the query
+   - Filters out low-quality or irrelevant sources
 
-1. Bearbeiten Sie die Testdaten in `test-data.json` nach Ihren Wünschen oder erstellen Sie neue Test-Fälle.
+4. **Content Extraction** (65-80%)
+   - Retrieves content from approved high-quality sources
+   - Processes and cleans the text content
+   - Shows progress for each source being processed
 
-2. Führen Sie den Test-Runner aus:
-```bash
-node test-runner.js
-```
+5. **Token Management** (80-85%)
+   - Checks total token count of collected content
+   - If exceeds 120,000 tokens, removes entire sources (starting with longest)
+   - Ensures content stays within LLM processing limits
 
-## Test-Daten Format
+6. **Summary Generation** (85-100%)
+   - Summarizes all collected information
+   - Creates a comprehensive response to the original query
+   - Returns results in a structured format
 
-Die Test-Daten sollten folgendes Format haben:
-```json
-{
-    "type": "line",     // Diagramm-Typ (z.B. "line", "bar", "scatter")
-    "dataset": {        // Dataset als Objekt mit Arrays
-        "x": [1, 2, 3], // Numerische Arrays
-        "y": [10, 20, 30]
-    },
-    "x": "x",          // X-Achsen-Bezeichner
-    "y": "y",          // Y-Achsen-Bezeichner
-    "title": "Test Chart" // Titel des Diagramms
-}
-```
+## Features
 
-## Anpassung der Tests
+- Smart query optimization for better search results
+- Automatic duplicate removal
+- Quality-based source filtering
+- Progressive loading with status updates
+- Token limit management
+- Efficient content summarization
 
-Sie können die Test-Daten entweder:
-1. Direkt in `test-data.json` bearbeiten
-2. Die `testData` Variable in `test-runner.js` ändern
-3. Den Test-Runner importieren und mit eigenen Daten aufrufen:
+## Debug Mode
 
-```javascript
-const { runTest } = require('./test-runner');
-runTest({
-    type: "bar",
-    dataset: {
-        "values": [1, 2, 3],
-        "labels": [10, 20, 30]
-    },
-    x: "labels",
-    y: "values",
-    title: "Mein Test"
-});
-```
+The skill includes a debug mode that can save intermediate results to avoid reprocessing the same queries during development:
+- Saves results to `debug_results.json`
+- Can load previous results to skip time-consuming processing steps
+- Useful for development and testing
+
+## Input Parameters
+
+The skill accepts a single input parameter:
+- `input`: The search query or question from the user (string)
+
+## Output
+
+Returns a structured response containing:
+- Original input query
+- Summarized information from all processed sources
+- Progress updates throughout the process
