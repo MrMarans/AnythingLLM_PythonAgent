@@ -188,34 +188,44 @@ def main():
         json_from_llm = response_data["textResponse"]
         json_from_llm = json.loads(json_from_llm)
         optimized_queries = json_from_llm["optimized_queries"]
-        # print(optimized_queries)
+
 
         search_results = []
         for search_querie in optimized_queries:
-            # print(search_querie)
+
             searchResults = search(search_querie, advanced = True, num_results=25, unique=True, lang="de")
             for result in searchResults:
-                # print(f"URL is: {result.url}, title is {result.title},  description is {result.description}")
+
                 search_results.append({"url": result.url, "title": result.title, "description": result.description, "goodSource": None})
 
         send_message_to_agent('Entscheidung der Quellenauswahl anhand der Frage. Das kann eine Weile dauern.', '', 30)
-        # print(search_results)
-        is_good_source =ask_llm(is_good_source_prompt(search_results, user_input))
-        print(is_good_source)
 
+
+
+        is_good_source =ask_llm(is_good_source_prompt(search_results , user_input))
+        # is_good_source = search_results
+        print(is_good_source)
         send_message_to_agent('Die Webseiten werden geladen', '', 65)
         allText = []
-        for source in is_good_source:
-            if source["goodSource"] == True:
+        debug = True
+        list_from_good_source = is_good_source["textResponse"] 
+        for source in  list_from_good_source:
+            print(f"the source is: {source}")
+            if source["goodSource"] == True or debug==True:
+                # print(source["url"])
                 url = source["url"]
+                send_message_to_agent(url, '', 70)
                 response = requests.get(url)
+                print(url)
                 if response.status_code == 200:
+                    print(response)
                     # HTML-Inhalt parsen
                     soup = BeautifulSoup(response.text, "html.parser")
-                    
+                    print(f"soup is {soup}")
                     # Nur den sichtbaren Text extrahieren
                     text = soup.get_text(separator="\n", strip=True)
                     source_with_text = {"text": text, "url": url}
+                    print(f"texts of sources are: {source_with_text}")
                     allText.append(source_with_text)
 
         send_message_to_agent('Fasse Webseitendaten zusammen', '', 85)
