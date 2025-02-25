@@ -100,10 +100,11 @@ To test your skill:
 - Clean up resources in your Python script
 
 - If you are using any pip packages for python, you need to add them to the Dockerfile (if you are using Docker), else AnythingLLM cant access those packages. In case of requests, bs4 and googlesearch-python, use this:
+```json
 RUN apt-get update && \
     apt-get install -y python3 python3-pip && \
     pip3 install requests bs4 googlesearch-python && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-
+```
 This template provides a foundation for building Python-based agent skills. You can extend it by adding more functionality while maintaining the basic communication structure between Node.js and Python.
