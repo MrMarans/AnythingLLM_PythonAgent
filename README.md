@@ -45,12 +45,6 @@ The agent follows these steps to process your search query:
 - Token limit management
 - Efficient content summarization
 
-## Debug Mode
-
-The skill includes a debug mode that can save intermediate results to avoid reprocessing the same queries during development:
-- Saves results to `debug_results.json`
-- Can load previous results to skip time-consuming processing steps
-- Useful for development and testing
 
 ## Input Parameters
 
@@ -63,3 +57,17 @@ Returns a structured response containing:
 - Original input query
 - Summarized information from all processed sources
 - Progress updates throughout the process
+
+
+## How to use
+
+Add the files to the agent folder in AnythingLLM. 
+Make sure you add the dependecies in the Dockerfile, else you cant use the packages:
+```json
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip && \
+    pip3 install requests bs4 googlesearch-python && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+```
+
+Also make sure to add the AnythingLLM Developer API of your instance to the process.py file. And add the right URL to your Workspace that will be used to summarize the google search.

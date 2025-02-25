@@ -6,6 +6,9 @@ from googlesearch import search
 from bs4 import BeautifulSoup
 from prompts import *
 
+Workspace_URL = 'http://192.XXX.XXX.XXX:3001/api/v1/workspace/deine-haupt-ki/chat'
+AnythingLLM_api = ""
+
 
 def send_message_to_agent(status, message, progress=None, **data):
     """Sendet eine JSON-formatierte Nachricht an Node.js"""
@@ -20,7 +23,7 @@ def send_message_to_agent(status, message, progress=None, **data):
 
 def ask_llm(user_input):
     """Führt die API-Anfrage durch"""
-    url = 'http://192.168.80.35:3001/api/v1/workspace/deine-haupt-ki/chat'
+    
     
     payload = {
         "message": user_input,
@@ -30,11 +33,11 @@ def ask_llm(user_input):
     
     headers = {
         'accept': 'application/json',
-        'Authorization': 'Bearer XHPMBWW-20VMQRB-NS2D1GQ-BE3246J',
+        'Authorization': f'Bearer {AnythingLLM_api}',
         'Content-Type': 'application/json'
     }
     
-    response = requests.post(url, json=payload, headers=headers)
+    response = requests.post(Workspace_URL, json=payload, headers=headers)
     response.raise_for_status()  # Fehler bei nicht-200 Status
     return response.json()
 
