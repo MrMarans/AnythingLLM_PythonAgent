@@ -1,7 +1,7 @@
 {
   "active": true,
   "hubId": "better_web_search",
-  "name": "Python Processor",
+  "name": "Better-Web-Search Skill by Ron Metzger",
   "schema": "skill-1.0.0",
   "version": "1.0.0",
   "description": "Erstelle eine erweiterte und eigene Google Suche. Hierfür werden anhand der Fragen später ein paar weitere Formulierungen erstellt und dann in Google gesucht.",
@@ -57,5 +57,6 @@
     }
   ],
   "setup_args": {
+
   }
 }

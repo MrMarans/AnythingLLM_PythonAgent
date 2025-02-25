@@ -4,141 +4,7 @@ import json
 import requests
 from googlesearch import search
 from bs4 import BeautifulSoup
-
-def new_search_texts_prompt(user_input):
-    # """Erstelle Variationssuchen für Google Suche"""
-    examples = """
-        {
-        "original_question": "Was sind die Auswirkungen von Klimawandel auf die Biodiversität?",
-        "optimized_queries": [
-            "Klimawandel Biodiversität Auswirkungen wissenschaftliche Studien",
-            "Einfluss des Klimawandels auf die Artenvielfalt Forschung",
-            "Wissenschaftliche Erkenntnisse zu Klimawandel und Biodiversität"
-        ]
-        },
-        {
-        "original_question": "Wie beeinflusst Stress die menschliche Gesundheit?",
-        "optimized_queries": [
-            "Einfluss von Stress auf die Gesundheit wissenschaftliche Analysen",
-            "Stress und Gesundheit: Auswirkungen auf den menschlichen Körper",
-            "Wissenschaftliche Studien zu Stress und Gesundheitsrisiken"
-        ]
-        },
-        {
-        "original_question": "Was sind die Vorteile der Meditation für das Gehirn?",
-        "optimized_queries": [
-            "Wissenschaftliche Vorteile von Meditation für das Gehirn",
-            "Meditation und neuronale Veränderungen: Forschungsergebnisse",
-            "Einfluss von Meditation auf die Gehirnfunktion Studien"
-        ]
-        },
-        {
-        "original_question": "Wie wirkt sich Ernährung auf psychische Gesundheit aus?",
-        "optimized_queries": [
-            "Ernährung und psychische Gesundheit: Wissenschaftliche Erkenntnisse",
-            "Einfluss der Ernährung auf die psychische Gesundheit Forschung",
-            "Zusammenhang zwischen Ernährung und psychischer Gesundheit Studien"
-        ]
-        },
-        {
-        "original_question": "Welche Rolle spielt Genetik bei der Krankheitsentwicklung?",
-        "optimized_queries": [
-            "Genetik und Krankheitsentwicklung: Wissenschaftliche Perspektiven",
-            "Einfluss genetischer Faktoren auf die Krankheitsentwicklung Forschung",
-            "Genetik und Erbkrankheiten: Aktuelle wissenschaftliche Studien"
-        ]
-        }
-    """
-
-    form = """{
-        "original_question": "Gefrage Frage",
-        "optimized_queries": [
-            "Variation 1",
-            "Variation 2",
-            "Variation 3"
-        ]
-        }"""
-
-    prompt = f"""
-        Vergiss alle vorherhigen prompts und chat Historien.
-        Du bist spezialist für die Google Suche und SEO. Du weißt genau, wie man mit welchen Anfragen auf sein Ziel kommt. Du kannst die normalste
-        Information, die nach jemand sucht, in perfekt optimierte Google Suchbegriffe verarbeiten.
-        Deine Aufgabe ist es, eine Frage unter anderem so umzustellen, dass sie in Google die besten Ergebnisse liefert.
-        
-        
-        Hier hast du einige Beispiele für die erwartete Ausgabe: 
-        {examples}
-
-        wie du sehen kannst, will ich einzig und allein eine json Ausgabe haben. Du sollst sonst keine Texte erstellen. Nur eine json in diesem Format soll ausgegeben werden:
-        {form}
-
-        Erstelle, nachdem du nun tief luft genommen hast, Variationen für die nachfolgende Frage:
-        {user_input}
-    """
-
-    return prompt
-
-
-def is_good_source_prompt(results_array, question):
-    examples = """[
-    {
-        "url": "https://www.lv1871.de/magazin/gesundheit/muell-vermeiden/",
-        "title": "Müll vermeiden im Haushalt: 25 effektive Tipps - LV 1871",
-        "description": "25 Tipps zur Müllvermeidung im Haushalt",
-        "goodSource": true
-    },
-    {
-        "url": "https://www.duh.de/aktuell/nachrichten/aktuelle-meldung/recycling-leichtgemacht-6-tipps-und-tricks-zur-muelltrennung/",
-        "title": "Recycling leichtgemacht: 6 Tipps und Tricks zur Mülltrennung",
-        "description": "18.03.2019  ·  Für ein optimales Recyclingergebnis sollten Deckel und Verpackung getrennt im Gelben Sack entsorgt werden. Dasselbe gilt für Papierbandrollen...",
-        "goodSource": false
-    },
-    {
-        "url": "https://utopia.de/ratgeber/muelltrennung-recycling_37038/",
-        "title": "Mülltrennung: So geht richtiges Recyceln - Utopia",
-        "description": "19.06.2024  ·  Gelbe Tonne und gelber Sack sollen helfen, Abfallmengen langfristig zu verringern, die Mülldeponierung abzuschaffen und Wertstoffe angemessen...",
-        "goodSource": true
-    }
-    ]"""
-    
-    prompt = f"""
-    Du vergisst alle vorherigen Chats und Nachrichtenprompts. 
-    Du bist langjähriger wissenschaftler und hast eine Menge Erfahrung bei der Suche nach richtigen Quellen. Du hast einige
-    Suchergebnisse gefunden, hast deren Webseite, URL und BEschreibungen. Du kannst die Qualität der Quellen anhand dieser Informationen bewerten und suchst
-    daher aus, welche Quellen zu der Frage passen. 
-
-    Deine Aufgabe ist es, diese Quellen nun zu bewerten, ob die für eine Recherche zu der jeweiligen Frage passt.
-    Die Frage ist folgende: {question} 
-    
-    Hier sind die möglichen Quellen: {results_array}
-
-    Deine Aufgabe ist es nun, eine solche Liste zu bewerten und die Quellen zu markieren. Du musst hierfür in der Liste der Quellen den Wert "goodSource" umwandeln in true oder false.
-    Wenn die Quelle gut ist, danns setze es auf true. Wenn nicht, dann auch false. 
-    Du musst die Liste der Quellen ansonsten genau so wieder zurück geben.  Hier ist ein kleines Beispiel, wie das aussehen kann:
-    {examples}
-
-
-"""
-    return prompt
-
-def summarize_webtexts_prompt(texts, question):
-    prompt = f"""
-    Vergiss alle vorherigen Anweisungen. Du bist experte für die Zusammenfassung von Texten. Du hast eine Menge Texte und wirst die Inhalte nun so zusammen fassen, damit die 
-    gestellte Frage so gut wie möglich beantwortet werden kann. 
-
-    Deine Antwort ist immer in Markdown und du stellt, soweit du eine Information wiedergibst, diese mit der Quelle dar.
-    Wenn du also etwas aus einem Text zusammen fasst, dann machst du das mit Markdown folgendermaßen:
-
-    **[Dein zusammengefasster Text](https://www.der-link-woher-du-die-Information-hast.de)**
-
-    Dadurch sind die jeweiligen Texte immer mit der Quelle verlinkt. 
-
-    Die Frage, die der Nutzer gestellt hat:
-    {question}
-    Nun folgen die Texte mit Quellen: 
-    {texts}
-
-    """
+from prompts import *
 
 
 def send_message_to_agent(status, message, progress=None, **data):
@@ -174,15 +40,22 @@ def ask_llm(user_input):
 
 def main():
     try:
+        # debug_file = "debug_results.json"
         user_input = sys.argv[1]
+        # 
         
-        send_message_to_agent('Frage KI nach möglichen Variationen der Google Anfrage', '', 00)
+        # # try to load the json here. If there is none:
+        # try:
+        #     with open(debug_file, 'r', encoding='utf-8') as f:
+        #         list_from_good_source = json.load(f)
+        #         send_message_to_agent('Loading cached results from file', '', 25)
+        # except FileNotFoundError:
+            # do all this code:
+        send_message_to_agent('Erstelle Variationen der Frage', '', 00)
         prompt = new_search_texts_prompt(user_input)
 
         response_data = ask_llm(prompt)
 
-        
-        
         send_message_to_agent('Entpacke mögliche Suchanfragen', '', 25)
         
         json_from_llm = response_data["textResponse"]
@@ -191,52 +64,92 @@ def main():
 
 
         search_results = []
+        seen_urls = []
         for search_querie in optimized_queries:
 
-            searchResults = search(search_querie, advanced = True, num_results=25, unique=True, lang="de")
+            searchResults = search(search_querie, advanced = True, num_results=15, unique=True, lang="de")
             for result in searchResults:
+                if result.url not in seen_urls: 
+                    search_results.append({"url": result.url, "title": result.title, "description": result.description, "goodSource": None})
+                    seen_urls.append(result.url)
+        
+        send_message_to_agent(f'Die Qualität der {len(seen_urls)} Quellen wird geprüft. Das dauert etwas.', '', 30)
 
-                search_results.append({"url": result.url, "title": result.title, "description": result.description, "goodSource": None})
+        is_good_source = ask_llm(is_good_source_prompt(search_results , user_input))
 
-        send_message_to_agent('Entscheidung der Quellenauswahl anhand der Frage. Das kann eine Weile dauern.', '', 30)
-
-
-
-        is_good_source =ask_llm(is_good_source_prompt(search_results , user_input))
-        # is_good_source = search_results
-        print(is_good_source)
-        send_message_to_agent('Die Webseiten werden geladen', '', 65)
-        allText = []
-        debug = True
+    
+        send_message_to_agent('Webseiten werden aufgerufen und der Inhalt wird entnommen', '', 65)
         list_from_good_source = is_good_source["textResponse"] 
-        for source in  list_from_good_source:
-            print(f"the source is: {source}")
-            if source["goodSource"] == True or debug==True:
-                # print(source["url"])
-                url = source["url"]
-                send_message_to_agent(url, '', 70)
-                response = requests.get(url)
-                print(url)
-                if response.status_code == 200:
-                    print(response)
-                    # HTML-Inhalt parsen
-                    soup = BeautifulSoup(response.text, "html.parser")
-                    print(f"soup is {soup}")
-                    # Nur den sichtbaren Text extrahieren
-                    text = soup.get_text(separator="\n", strip=True)
-                    source_with_text = {"text": text, "url": url}
-                    print(f"texts of sources are: {source_with_text}")
-                    allText.append(source_with_text)
+        list_from_good_source = json.loads(list_from_good_source)
+
+        # Berechne den Fortschritt zwischen 65% und 80%
+        progress_start = 65
+        progress_end = 80
+        progress_range = progress_end - progress_start
+        
+        # good_sources = [s for s in list_from_good_source if s["goodSource"] == True]
+        progress_per_source = progress_range / len(list_from_good_source) if list_from_good_source else 0
+        
+        allText = []
+        current_progress = progress_start
+        
+        for source in list_from_good_source:
+            if source["goodSource"] == True:
+                try:
+                    url = source["url"]
+                    send_message_to_agent(url, '', current_progress)
+                    current_progress += progress_per_source
+                    
+                    response = requests.get(url)
+
+                    if response.status_code == 200:
+    
+                        soup = BeautifulSoup(response.text, "html.parser")
+        
+                        text = soup.get_text(separator="\n", strip=True)
+                        source_with_text = {"text": text, "url": url}
+
+                        allText.append(source_with_text)
+                except Exception as e:
+                    send_message_to_agent('error', f'Fehler bei Webaufruf: {str(e)}')
+
+
+
+        send_message_to_agent('Prüfe Token-Anzahl und kürze bei Bedarf', '', 80)
+        # Zähle ungefähre Token-Anzahl (ca. 4 Zeichen pro Token)
+        total_chars = sum(len(source['text']) for source in allText)
+        approx_tokens = total_chars // 4
+
+        if approx_tokens > 80000:
+            send_message_to_agent(f'Zu viele Tokens: {approx_tokens}. Entferne überschüssige Quellen.', '', 82)
+            # Sortiere Sources nach Länge (kürzeste zuerst)
+            allText.sort(key=lambda x: len(x['text']))
+            
+            filtered_sources = []
+            current_tokens = 0
+            
+            # Füge Sources hinzu, solange wir unter dem Token-Limit bleiben
+            for source in allText:
+                source_tokens = len(source['text']) // 4
+                if current_tokens + source_tokens <= 80000:
+                    filtered_sources.append(source)
+                    current_tokens += source_tokens
+                else:
+                    break
+            
+            send_message_to_agent(f'Reduzierte Anzahl der Quellen von {len(allText)} auf {len(filtered_sources)}', '', 83)
+            allText = filtered_sources
 
         send_message_to_agent('Fasse Webseitendaten zusammen', '', 85)
-        output = ask_llm(summarize_webtexts_prompt(allText, user_input))
+        output = summarize_webtexts_prompt(allText, user_input)
+        # output = ask_llm(sum)
 
         
 
 
         # Ergebnis zurückgeben
         send_message_to_agent('completed', 'Request completed', 100, 
-                    results={'input': user_input, 'output': output})
+                    results={'input': user_input, 'output': output })
         
     except requests.exceptions.RequestException as e:
         send_message_to_agent('error', f'API request failed: {str(e)}')
