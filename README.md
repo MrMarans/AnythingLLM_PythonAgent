@@ -108,3 +108,4 @@ RUN apt-get update && \
 
 ```
 This template provides a foundation for building Python-based agent skills. You can extend it by adding more functionality while maintaining the basic communication structure between Node.js and Python.
+Check out the branches of this repository. All my python agents that don't need a backend (for example creating docx files for users to download) are there.
